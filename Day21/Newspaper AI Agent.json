@@ -1,0 +1,148 @@
+{
+  "name": "Newspaper AI Agent",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        -176
+      ],
+      "id": "37ffd0f5-883a-4c91-9386-f7f4157a74c4",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://newsapi.org/v2/everything?q=technology&language=en&apiKey=803f3fcfa9e74f9c98b4e1fee4f5b738",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        32,
+        -176
+      ],
+      "id": "6e1d48f3-c4cc-4ab9-af39-19b685c9154d",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "37712421-ce7c-4f0c-935e-7667bed2661f",
+              "name": "articles",
+              "value": "={{$json[\"articles\"]}}\n",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {
+          "ignoreConversionErrors": true
+        }
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        -176
+      ],
+      "id": "3b50bb86-38c0-4768-a980-e3917a7ad2be",
+      "name": "News"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a professional newspaper editor.\n\nBelow are news articles in JSON format:\n{{ $json[\"articles\"] }}\n\nUsing the provided news articles:\n- Identify the most important information\n- Summarize the key points clearly\n- Rewrite the content in formal newspaper style\n- Keep the tone factual and neutral\n- Do not use emojis or casual language\n\nReturn one clean newspaper-style article.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -304,
+        64
+      ],
+      "id": "7e49ec8d-f908-44bb-b020-0dd9fb3b1e8d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -304,
+        224
+      ],
+      "id": "5faa2721-d983-434b-b835-fa2b373ce073",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "4uOtRQEWPGsQGfZ5",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "News",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "News": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "e40b273c-8762-4aa9-a314-c52f498460a2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "22d2ba297094ed19d5f9c3d8825428a92e703d37ea1036598ff51a3e870c3b7a"
+  },
+  "id": "VduNKmsPlrzyg7SBiHc2H",
+  "tags": []
+}
