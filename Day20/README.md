@@ -79,11 +79,5 @@ This cycle repeats until the task is completed.
 ✅ Run on **Local Machine / VPS / Docker**  
 ❌ **DON'T TRY TO RUN browser-use IN GOOGLE COLAB**
 
----
 
-# 🛠 Installation
 
-## 1) Install Playwright + Chromium
-```bash
-pip install playwright
-playwright install chromium --with-deps
